@@ -1,6 +1,8 @@
 #+TITLE: Borg-nix-shell: build Borg packages with Nix-Shell
 
-[[https://github.com/emacscollective/borg][Borg]] is a package manager for Emacs using Git submodules to store packages.  Unlike =package.el=, Borg requires that all packages be built locally.  For most packages, it's only a matter of byte-compiling Emacs-Lisp code, and should be totally transparent to the user.  But some packages require  external build tools, maybe libraries, which may not be available on all systems, or not easily installable.  =Borg-nix-shell= plugs into Borg to run [[https://emacsmirror.net/manual/borg/Git-variables.html#Git-variables][build-steps]] through =nix-shell=.
+[[https://github.com/emacscollective/borg][Borg]] is a package manager for Emacs storing packages as Git submodules.  Unlike =package.el=, Borg requires that all packages be built locally.  In most cases, all it takes is byte-compiling a few Emacs-Lisp files, which Borg can do in a totally transparent manner.  But some packages require external build tools or libraries, which may not be available on all systems, or not easily installable.
+
+=Borg-nix-shell= plugs into Borg to run [[https://emacsmirror.net/manual/borg/Git-variables.html#Git-variables][build-steps]] through =nix-shell=, from the [[https://nixos.org][Nix package manager]].
 
 * Usage
 
@@ -16,7 +18,7 @@ Then, for each package requiring it:
 
  - *Or* set =submodules.DRONE.build-nix-shell-file= to the path of a Nix file, which will be passed to =nix-shell= as the last positional argument.
 
-If none of these variables are provided for a given drone, =borg-nix-shell= adds an empty =-p= argument to =nix-shell= /unless/ the drone's work tree has a =shell.nix= or =default.nix= at its root, in which case no arguments are added and =nix-shell= should pick the correct file.
+If none of these variables are provided, =borg-nix-shell= adds an empty =-p= argument to =nix-shell= /unless/ the drone's work tree has a =shell.nix= or =default.nix= at its root, in which case no arguments are added and =nix-shell= should pick the correct file.
 
 As an example, here's how I configure [[https://github.com/politza/pdf-tools][PDF Tools]]:
 
@@ -30,4 +32,4 @@ As an example, here's how I configure [[https://github.com/politza/pdf-tools][PD
 
 * Configuration
 
-There's a =borg-nix-shell-build-use-pure-shell= which determines if =nix-shell= should receive the =--pure= flag.  It defaults to =t=, and you really, really shouldn't change it.
+There's a =borg-nix-shell-build-use-pure-shell= variable which determines if =nix-shell= should be passed the =--pure= flag.  It defaults to =t=, and you really, really shouldn't change it.
