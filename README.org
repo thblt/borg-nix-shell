@@ -1,0 +1,33 @@
+#+TITLE: Borg-nix-shell: build Borg packages with Nix-Shell
+
+[[https://github.com/emacscollective/borg][Borg]] is a package manager for Emacs using Git submodules to store packages.  Unlike =package.el=, Borg requires that all packages be built locally.  For most packages, it's only a matter of byte-compiling Emacs-Lisp code, and should be totally transparent to the user.  But some packages require  external build tools, maybe libraries, which may not be available on all systems, or not easily installable.  =Borg-nix-shell= plugs into Borg to run [[https://emacsmirror.net/manual/borg/Git-variables.html#Git-variables][build-steps]] through =nix-shell=.
+
+* Usage
+
+Assimilate =borg-nix-shell= (or just copy =borg-nix-shell-build-command= somewhere in your =init.el=) then:
+
+#+BEGIN_SRC emacs-lisp
+  (setq borg-build-shell-command 'borg-nix-shell-build-command)
+#+END_SRC
+
+Then, for each package requiring it:
+
+ - Set =submodules.DRONE.build-nix-shell-packages= to a list of packages to pass to =nix-shell= with the =-p= argument.
+
+ - *Or* set =submodules.DRONE.build-nix-shell-file= to the path of a Nix file, which will be passed to =nix-shell= as the last positional argument.
+
+If none of these variables are provided for a given drone, =borg-nix-shell= adds an empty =-p= argument to =nix-shell= /unless/ the drone's work tree has a =shell.nix= or =default.nix= at its root, in which case no arguments are added and =nix-shell= should pick the correct file.
+
+As an example, here's how I configure [[https://github.com/politza/pdf-tools][PDF Tools]]:
+
+#+BEGIN_EXAMPLE
+[submodule "pdf-tools"]
+	path = lib/pdf-tools
+	url = git@github.com:politza/pdf-tools.git
+  build-nix-shell-packages = gnumake automake autoconf pkgconfig libpng zlib poppler_gi
+  build-step = make ./server
+#+END_EXAMPLE
+
+* Configuration
+
+There's a =borg-nix-shell-build-use-pure-shell= which determines if =nix-shell= should receive the =--pure= flag.  It defaults to =t=, and you really, really shouldn't change it.
