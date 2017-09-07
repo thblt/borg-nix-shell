@@ -33,7 +33,7 @@
 
 ;;;###autoload
 (defun borg-nix-shell-build-command (drone)
-  "Return a function wrapping a command in a nix-shell invocation for DRONE.
+  "Return a format string for wrapping a build-step in a nix-shell.
 
 The nix-shell is started with the file at
 submodules.DRONE.build-nix-shell-file or the packages at
