@@ -50,6 +50,6 @@ arguments are added."
                           (file-exists-p (expand-file-name "default.nix" (borg-worktree drone))))
                 (concat "-p " (car (borg-get drone "build-nix-shell-packages")))))))
 
-(provide 'borg-build-shell)
+(provide 'borg-nix-shell)
 
 ;;; borg-nix-shell.el ends here
