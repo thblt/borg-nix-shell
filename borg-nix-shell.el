@@ -44,8 +44,8 @@ arguments are added."
   (concat "nix-shell "
             (when borg-nix-shell-build-use-pure-shell "--pure ")
             "--run %S "
-            (--if-let (car (borg-get drone "build-nix-shell-file"))
-                it
+            (if (car (borg-get drone "build-nix-shell-file"))
+                (car (borg-get drone "build-nix-shell-file"))
               (unless (or (file-exists-p (expand-file-name "shell.nix" (borg-worktree drone)))
                           (file-exists-p (expand-file-name "default.nix" (borg-worktree drone))))
                 (concat "-p " (car (borg-get drone "build-nix-shell-packages")))))))
