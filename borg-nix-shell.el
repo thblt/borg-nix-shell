@@ -1,6 +1,6 @@
 ;;; borg-nix-shell -- Nix-shell support for building Borg drones
 
-;; Copyright (c) 2017 Thibault Polge <thibault@thb.lt>
+;; Copyright (c) 2017-2018 Thibault Polge <thibault@thb.lt>
 
 ;; Author: Thibault Polge <thibault@thb.lt>
 ;; Homepage: https://github.com/thblt/borg-nix-shell
@@ -31,6 +31,20 @@
 
 ;;; Code:
 
+(defun borg-nix-shell-borg-get (drone key &optional all)
+  "A reimplementation of `borg-get' for consistency.
+
+Since commit 89a939494e98056feb28da9f405e18cb140d7f22, (borg-get
+drone key nil) returns a string in some cases.
+
+This function has consistent behavior regardless of the way Borg behaves"
+(let ((ret (borg-get drone key all)))
+  (if all
+      ret
+      (if (listp ret)
+          ret
+          (list ret)))))
+
 ;;;###autoload
 (defun borg-nix-shell-build-command (drone)
   "Return a format string for wrapping a build-step in a nix-shell.
@@ -44,11 +58,11 @@ arguments are added."
   (concat "nix-shell "
             (when borg-nix-shell-build-use-pure-shell "--pure ")
             "--run %S "
-            (if (car (borg-get drone "build-nix-shell-file"))
-                (car (borg-get drone "build-nix-shell-file"))
+            (if (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
+                (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
               (unless (or (file-exists-p (expand-file-name "shell.nix" (borg-worktree drone)))
                           (file-exists-p (expand-file-name "default.nix" (borg-worktree drone))))
-                (concat "-p " (car (borg-get drone "build-nix-shell-packages")))))))
+                (concat "-p " (car (borg-nix-shell-borg-get drone "build-nix-shell-packages")))))))
 
 (provide 'borg-nix-shell)
 
