@@ -3,7 +3,7 @@
 ;; Copyright (c) 2017 Thibault Polge <thibault@thb.lt>
 
 ;; Author: Thibault Polge <thibault@thb.lt>
-;; Homepage: https://github.com/thblt/borg-queen
+;; Homepage: https://github.com/thblt/borg-nix-shell
 ;; Keywords: tools
 
 ;; This file is free software; you can redistribute it and/or modify
