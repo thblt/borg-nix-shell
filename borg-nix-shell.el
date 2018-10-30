@@ -56,7 +56,7 @@ provided, and the package has no default.nix, it is run with the
 -p argument.  If there's a default.nix or shell.nix, no extra
 arguments are added."
   (if (borg-nix-shell-borg-get drone "build-nix-shell-disable")
-      "%S"
+      nil
       (concat "nix-shell "
               (when borg-nix-shell-build-use-pure-shell "--pure ")
               "--run %S "
