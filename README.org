@@ -6,7 +6,7 @@
 
 * Usage
 
-Assimilate =borg-nix-shell= (or just copy =borg-nix-shell-build-command= somewhere in your =init.el=) then:
+Assimilate =borg-nix-shell= (or just copy its contents somewhere in your =init.el=) then:
 
 #+BEGIN_SRC emacs-lisp
   (setq borg-build-shell-command 'borg-nix-shell-build-command)
@@ -17,6 +17,8 @@ Then, for each package requiring it:
  - Set =submodules.DRONE.build-nix-shell-packages= to a list of packages to pass to =nix-shell= with the =-p= argument.
 
  - *Or* set =submodules.DRONE.build-nix-shell-file= to the path of a Nix file, which will be passed to =nix-shell= as the last positional argument.
+
+ - *Or* set =submodules.DRONE.build-nix-shell-disable= to any value to run the build-steps unmodified.  This has been implemented for packages which provide Nix-aware build systems, like PDF-Tools.
 
 If none of these variables are provided, =borg-nix-shell= adds an empty =-p= argument to =nix-shell= /unless/ the drone's work tree has a =shell.nix= or =default.nix= at its root, in which case no arguments are added and =nix-shell= should pick the correct file.
 

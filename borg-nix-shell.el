@@ -55,14 +55,16 @@ submodules.DRONE.build-nix-shell-packages.  If none of this is
 provided, and the package has no default.nix, it is run with the
 -p argument.  If there's a default.nix or shell.nix, no extra
 arguments are added."
-  (concat "nix-shell "
-            (when borg-nix-shell-build-use-pure-shell "--pure ")
-            "--run %S "
-            (if (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
-                (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
+  (if (borg-nix-shell-borg-get drone "build-nix-shell-disable")
+      "%S"
+      (concat "nix-shell "
+              (when borg-nix-shell-build-use-pure-shell "--pure ")
+              "--run %S "
+              (if (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
+                  (car (borg-nix-shell-borg-get drone "build-nix-shell-file"))
               (unless (or (file-exists-p (expand-file-name "shell.nix" (borg-worktree drone)))
                           (file-exists-p (expand-file-name "default.nix" (borg-worktree drone))))
-                (concat "-p " (car (borg-nix-shell-borg-get drone "build-nix-shell-packages")))))))
+                (concat "-p " (car (borg-nix-shell-borg-get drone "build-nix-shell-packages"))))))))
 
 (provide 'borg-nix-shell)
 
